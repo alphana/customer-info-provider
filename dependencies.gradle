@@ -1,0 +1,25 @@
+dependencies {
+    compile "org.keycloak:keycloak-core:12.0.4"
+    compile "org.keycloak:keycloak-server-spi:12.0.4"
+    compile "org.keycloak:keycloak-server-spi-private:12.0.4"
+    compile 'org.keycloak:keycloak-services:12.0.4'
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.11.0"
+    compile "org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec:2.0.1.Final"
+    compile "org.jboss.resteasy:resteasy-jaxrs:3.11.2.Final"
+    implementation 'plateau.security:notification-provider:1.1.0-SNAPSHOT'
+
+    implementation 'javax.xml.ws:jaxws-api:2.3.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0-M1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0-M1")
+    testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
+
+    testCompile group: 'org.keycloak', name: 'keycloak-model-jpa', version: '12.0.4'
+
+
+
+}

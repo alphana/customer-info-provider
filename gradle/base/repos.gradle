@@ -1,0 +1,50 @@
+def nexusURL = System.getenv('NEXUS_URL') ?: 'http://nexus.rally.softtech'
+
+ext.mvnUser = findProperty('mvnUser') ?: System.getenv('MAVEN_USER')
+if(! ext.mvnUser) {
+    ext.mvnUser = 'uploader'
+}
+
+ext.mvnPassword = findProperty('mvnPassword') ?: System.getenv('MAVEN_PWD')
+if(! ext.mvnPassword) {
+    ext.mvnPassword = 'S@FTt_ch81112!?'
+}
+
+ext {
+    mvnPublicRepo = [
+            'url' : "$nexusURL/repository/public/",
+            'username' : mvnUser,
+            'password' : mvnPassword
+    ]
+
+    //TODO : added Maven Release and Snapshot Repository Properties
+    mvnReleaseRepo = [
+            'url' : "$nexusURL/repository/maven-releases/",
+            'username' : mvnUser,
+            'password' : mvnPassword
+    ]
+
+    mvnSnapshotRepo = [
+            'url' : "$nexusURL/repository/maven-snapshots/",
+            'username' : mvnUser,
+            'password' : mvnPassword
+    ]
+
+    mvnCommonsPublishRepo = mvnReleaseRepo
+}
+
+// define how the dependencies are resolved
+repositories {
+    mavenLocal()
+    maven {
+        name 'cloudNexus'
+        url mvnPublicRepo.url
+        allowInsecureProtocol true
+        credentials {
+            username mvnPublicRepo.username
+            password mvnPublicRepo.password
+        }
+    }
+}
+
+ext.repos = repositories

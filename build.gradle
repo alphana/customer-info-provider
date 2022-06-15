@@ -1,0 +1,65 @@
+buildscript {
+    apply from: './gradle/base/repos.gradle'
+    repositories.addAll(repos)
+
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1"
+    }
+}
+
+group = 'plateau.security'
+description = 'Plateau Security - Keycloak - IAM Custom Password Policies'
+version = '1.0.2'
+
+apply plugin: 'java-library' 
+apply plugin: 'maven-publish'
+apply plugin: "org.sonarqube"
+
+apply from: 'dependencies.gradle'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+test {
+    useJUnitPlatform()
+}
+def mvnInfo = project.version.endsWith('-SNAPSHOT')?mvnSnapshotRepo:mvnReleaseRepo
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url mvnInfo.url
+            credentials {
+                username = mvnInfo.username
+                password = mvnInfo.password
+            }
+        }
+    }
+}
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
+sonarqube {
+    properties {
+        property "sonar.host.url", System.getenv("SONARQUBE_URL")
+        property "sonar.analysis.mode", new File("./jenkins.analysismode").text.trim()
+        property "sonar.projectKey", "rally-" + new File("./jenkins.gitlabprojectid").text.trim()
+        property "sonar.gitlab.commit_sha", new File("./jenkins.commitid").text.trim()
+        property "sonar.gitlab.ref_name", new File("./jenkins.gitbranchname").text.trim()
+        property "sonar.gitlab.project_id", new File("./jenkins.gitlabprojectid").text.trim()
+    }
+}
